@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git 原理 · 三维交互图解</title>
+<meta name="description" content="用 Three.js 把 Git 的对象模型、三个区域、分支、合并、变基与远程协作画成可以动手操作的三维场景。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230071e3'/%3E%3Cpath d='M11 9v14M11 16h6a4 4 0 0 0 4-4V9' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='9' r='2.6' fill='%23fff'/%3E%3Ccircle cx='11' cy='23' r='2.6' fill='%23fff'/%3E%3Ccircle cx='21' cy='9' r='2.6' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/addons/" } }
+</script>
+</head>
+<body>
+<div id="app">
+  <aside id="guide">
+    <header class="g-head">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M11 9v14M11 16h6a4 4 0 0 0 4-4V9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="9" r="2.6" fill="#fff"/><circle cx="11" cy="23" r="2.6" fill="#fff"/><circle cx="21" cy="9" r="2.6" fill="#fff"/></svg>
+        <div>
+          <h1>Git 原理</h1>
+          <p>三维交互图解</p>
+        </div>
+      </div>
+      <button class="icon-btn" id="theme" title="切换深色 / 浅色" aria-label="切换深色或浅色">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </header>
+    <nav id="chapters" aria-label="章节"></nav>
+    <div id="content"></div>
+    <footer id="stepbar"></footer>
+  </aside>
+
+  <main id="right">
+    <section id="stage" aria-label="三维场景">
+      <div id="hud">
+        <div class="hud-row">
+          <div class="seg" id="views" role="group" aria-label="视角">
+            <button data-view="overview">全景</button>
+            <button data-view="zones">三个区域</button>
+            <button data-view="dag">提交图</button>
+            <button data-view="remote">远程</button>
+          </div>
+          <button class="chip" id="toggle-objects" aria-pressed="false">对象层</button>
+        </div>
+        <div class="legend">
+          <span><i class="dot c-commit"></i>commit 提交</span>
+          <span><i class="dot c-tree"></i>tree 目录</span>
+          <span><i class="dot c-blob"></i>blob 文件内容</span>
+          <span><i class="dot c-dangling"></i>不可达</span>
+        </div>
+      </div>
+      <div id="inspector">
+        <div class="insp-head">
+          <div class="seg" id="insp-tabs" role="tablist">
+            <button data-tab="obj" role="tab">对象详情</button>
+            <button data-tab="gitdir" role="tab">.git 目录</button>
+          </div>
+          <button class="icon-btn" id="insp-fold" title="收起 / 展开" aria-label="收起或展开面板">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div id="insp-body"></div>
+      </div>
+      <div id="tooltip" role="tooltip"></div>
+      <div id="webgl-error" hidden>你的浏览器没有启用 WebGL，无法显示三维场景。左侧教程和下方终端仍然可以使用。</div>
+    </section>
+
+    <section id="term" aria-label="终端">
+      <div class="term-head">
+        <span class="term-title">终端</span>
+        <span class="term-path">~/demo</span>
+        <span class="spacer"></span>
+        <button class="btn btn-sm" id="term-help">命令列表</button>
+        <button class="btn btn-sm" id="term-clear">清屏</button>
+      </div>
+      <div id="term-out" aria-live="polite"></div>
+      <form id="term-form" autocomplete="off">
+        <label for="term-in" id="prompt">$</label>
+        <input id="term-in" spellcheck="false" autocapitalize="off" placeholder="输入命令后回车；留空直接回车 = 执行教程的下一步">
+      </form>
+    </section>
+  </main>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "git3d", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "4620"], "port": 4620 }
+  ]
+}
